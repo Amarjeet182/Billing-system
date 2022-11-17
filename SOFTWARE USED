@@ -1,0 +1,69 @@
+2. technology USED
+2.1 FRONT-END: PYTHON
+Python is a dynamic, object-oriented and general-purpose programming language. It offers strong support for integrating with other technologies, higher programmer productivity throughout the development lifecycle, and is particularly well suited for large or complex projects with changing requirements.
+It was created by Guido Van Rossum when he was working at CWI which is a National Research Institute for Mathematics and Computer Science in Netherlands. The language was released in 1991. Python got its name from a BBC comedy series from seventies- “Monty Python’s Flying Circus”. Python can be used to follow both Procedural approach and Object Oriented approach of programming. It is free to use.
+Python’s clean object-oriented design and extensive support libraries offer two to tenfold the programmer productivity seen with languages like C, C++, C#, Java, VB and Pert. Python is available for most operating systems, including Windows, UNIX, Linux and Mac OS.
+Python is being used to develop applications for varied domains like Web applications, Desktop applications, GUI applications, Mobile applications, Gaming applications, Data Analysis, Data Sciences, Data Visualization, Machine learning and Scientific applications.
+Python is being used by a number of popular websites and organizations, some of them being, Google, Facebook, YouTube, NASA, IBM. Yahoo, Instagram, Reddit, Amazon, Uber, Pinterest and Netflix.
+Some of the features of Python are:
+a)	Free and open source
+Python is freely downloadable from https://www.python.org/downloads/ (Free). The source code of Python is available (open).
+
+b)	High level language
+It is close to human-understandable language that makes it easy to understand, read and manage.
+
+c)	General purpose programming language
+Can be used to write code/software for a wide variety of application domains.
+
+d)	Interpreted
+Executes the source code line by line. Execution stops when either an error is encountered in any code statement or all the lines have been successfully executed.
+
+e)	Object-oriented programming language
+Python is an Object-Oriented Programming language and supports all the features of OOP.
+
+f)	Dynamically typed language
+In Python, the type of an object/variable is decided at runtime, not in advance. The type of an object is determined by the value assigned to it. 
+
+g)	Integrated language
+We can easily integrated Python with other languages like C,C++ etc.
+
+h)	GUI programming
+Python offers various libraries like Tkinter, wxPython for making a Graphical user interface for our applications.
+
+i)	Huge Community
+Python has a huge community of developers that are available for support of all types.
+
+j)	Portable 
+Same python code can execute on Windows, MAC, Linux, Unix without making any changes.
+
+k)	Easy to code and read
+With its simple and concise syntax and short code length, Python is considered to be a Beginner - friendly programming language. 
+l)	Large standard library - “Batteries included”
+Python’s standard library provides a rich set of modules and functions so that users do not have to write their own code for every single thing.
+
+2.2 BACK-END: MySQL
+MySQL, the most popular Open Source SQL Database Management System, is developed, distributed, and supported by Oracle Corporation.
+Some of the features of MySQL are:
+a)	MySQL is a database management system.
+A database is a structured collection of data. It may be anything from a simple shopping list to a picture gallery or the vast amounts of information in a corporate network. To add, access, and process data stored in a computer database, we need a database management system such as MySQL Server. Since computers are very good at handling large amounts of data, database management systems play a central role in computing, as standalone utilities, or as parts of other applications.
+
+b)	MySQL databases are relational.
+A relational database stores data in separate tables rather than putting all the data in one big storeroom. The database structures are organized into physical files optimized for speed. The logical model, with objects such as databases, tables, views, rows, and columns, offers a flexible programming environment.
+The SQL part of “MySQL” stands for “Structured Query Language”. SQL is the most common standardized language used to access databases.
+
+c)	MySQL software is Open Source.
+Open Source means that it is possible for anyone to use and modify the software. Anybody can download the MySQL software from the MySQL website http://www.mysql.com/ and use it without paying anything. If one wishes, one may study the source code and change it to suit his/her needs. The MySQL software uses the GPL (GNU General Public License, to define what we may and may not do with the software in different situations.
+The MySQL website http://www.mysql.com/ also provides the latest information about MySQL software.
+
+d)	The MySQL Database Server is very fast, reliable, scalable, and easy to use.
+MySQL Server can run comfortably on a desktop or laptop, alongside our other applications, web servers, and so on, requiring little or no attention. If we dedicate an entire machine to MySQL, we can adjust the settings to take advantage of all the memory, CPU power, and I/O capacity available. MySQL can also scale up to clusters of machines, networked together.
+MySQL Server was originally developed to handle large databases much faster than existing solutions and has been successfully used in highly demanding production environments for several years. Although under constant development, MySQL Server today offers a rich and useful set of functions. Its connectivity, speed, and security make MySQL Server highly suited for accessing databases on the Internet.
+
+e)	MySQL Server works in client/server or embedded systems.
+The MySQL Database Software is a client/server system that supports different back ends, several different client programs and libraries, administrative tools, and a wide range of application programming interfaces (APIs).
+MySQL Server as an embedded library can be linked into an application to get a smaller, faster, easier-to-manage standalone product.
+
+f)	Works on many different platforms.
+
+MySql can run on multiple platforms like Windows, Linux and Unix.
+ 
