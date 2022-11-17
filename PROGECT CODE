@@ -1,0 +1,1375 @@
+import mysql.connector
+import random as r
+import string as s
+from tabulate import tabulate
+
+
+con=mysql.connector.connect(host='localhost',user='root',password='anmol2003')
+cur=con.cursor()
+
+def back():
+     return
+
+
+database="create database if not exists school"
+cur.execute(database)
+q="use school"
+cur.execute(q)
+stud_table="create table if not exists stud_info(srno varchar(10) primary key,name varchar(30),class varchar(10),dob varchar(15),mobileno varchar(15),address varchar(40))"
+cur.execute(stud_table)
+teacher_table="create table if not exists teacher_info(tno varchar(10) primary key,name varchar(30),sub varchar(20),post varchar(20),salary varchar(10),address varchar(20),mobileno varchar(15))"
+cur.execute(teacher_table)
+fees_student="create table if not exists fees(name varchar(20),class varchar(10),srno varchar(10) primary key references stud_info(srno),month varchar(15),date_paid varchar(15),paid varchar(15))"
+cur.execute(fees_student)
+sal_teacher="create table if not exists salary(tno varchar(10) references teacher_info(tno),name varchar(20),month varchar(15),paid varchar(10))"
+cur.execute(sal_teacher)
+admin="create table if not exists admin_school(admin_id varchar(10),name varchar(25),password varchar(25))"
+cur.execute(sal_teacher)
+
+
+
+
+
+def student(): 
+     q="use school"
+     cur.execute(q)
+     
+     def insert_student():
+          snm=input("Enter Student Name: ")
+          c=input("Enter Class{like 3B,7A}: ")
+          dob=input("Enter Date Of Birth:")
+          mob=input("Enter Mobile  Number:")
+          add=input("Enter Address:")
+
+          query="select * from stud_info where class='%s'" % (c,)
+          cur.execute(query)
+          l=cur.fetchall()
+
+          sno=c+"00"+str(len(l)+1)
+          query="insert into stud_info values('%s','%s','%s','%s','%s','%s')" % (sno,snm,c,dob,mob,add)
+          
+          cur.execute(query)
+          con.commit()
+          print("new record inserted successfully \n Your Serial Number is",sno,", Please note is down.")
+          print()
+          
+
+     def showing_student():
+          query="select * from stud_info"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Empty set...")
+               print()
+               return
+
+          else:
+               print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+          print()
+
+
+     def search_student():
+          
+          while True:
+               print()
+               print("----- SEARCHING IN STUDENT TABLE-----")
+               print("1. Search by Sr.No.")
+               print("2. Search by Name")
+               print("3. Search by Class")
+               print("4. Search by Address")
+               print("5. Search by DOB")
+               print("6. Exit")
+               ch=int(input("Enter your choice:"))
+
+               if ch==1:
+
+                 #Search By Serial Number
+
+                 print()
+                 n=input("Enter Serial number to be searched:")
+                 query="select * from stud_info where srno='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                      print(n,"Serial number not found")
+                      print()
+
+                 else:
+
+                      print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+                 print()            
+
+               if ch==2:
+
+                 #Search By Name
+
+                 print()
+                 n=input("Enter Student name to be searched:")
+                 query="select * from stud_info where name='%s'" %(n,) 
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"Student name not found")
+                     print()
+                     
+                           
+                 else:
+                      print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+                 print()
+                 
+               if ch==3:
+
+                 #Search By Class
+
+                 print()
+                 n=input("Enter class to be searched :")
+                 query="select * from stud_info where class='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"Class not found")
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+                 print()
+                        
+               if ch==4:
+
+                 #Search By Address
+
+                 print()
+                 n=input("Enter Address to be searched :")
+                 query="select * from stud_info where address='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print("Address with",n,"not found")
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+                 print()
+
+
+               if ch==5:
+                    #Search By Date of Birth
+
+                    print()
+                    n=input("Enter year to be searched:")
+                    m="%"+n
+                    query="select * from stud_info where dob like '%s'" % (m,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                     print("No Records with Year",n)
+                     
+                           
+                    else:
+                     print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+                    print()
+
+               if ch==6:
+
+                    return
+                 
+
+     def update_student():
+
+          while True:
+
+               print()
+               print("------UPDATE MENU------")
+               print("1. Update Name")
+               print("2. Update Class")
+               print("3. Update Date Of Birth")
+               print("4. Update Mobile Number")
+               print("5. Update Address")
+               print("6. Exit")
+               ch=int(input("Enter your choice:"))
+
+               if ch==1:
+                    #Updaing Name
+
+                    print()
+                    sr=input("Enter Serial Number To Be Updated:")
+                    query="select * from stud_info where srno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Serial number not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    nm=input("Enter new name:")
+                    query="update stud_info set name= '%s' where srno='%s'" % (nm,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+                
+               if ch==2:
+
+                    #Updaing class
+                    print()
+                    sr=input("Enter Serial Number To Be Updated:")
+                    query="select * from stud_info where srno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Serial number not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+                    
+                    print()                
+                    cl=input("Enter new class:")
+                    query="update stud_info set class= '%s' where srno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    query="select * from stud_info where class='%s'" % (cl,)
+                    cur.execute(query)
+                    s=cur.fetchall()
+                    sno=cl+"00"+str(len(s))
+                    query="update stud_info set srno= '%s' where srno='%s'" % (sno,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("new record inserted successfully \n Your Serial Number is",sno,", Please note is down.")
+                    print()
+                
+                
+               if ch==3:
+                    #Updating DOB
+                    print()
+                    sr=input("Enter Serial Number To Be Updated:")
+                    query="select * from stud_info where srno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Serial number not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    cl=input("Enter new DOB):")
+                    query="update stud_info set dob= '%s' where srno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+                
+                
+               if ch==4:
+                    
+                    #Updating Mobile Number
+                    print()
+                    sr=input("Enter Serial Number To Be Updated:")
+                    query="select * from stud_info where srno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Serial number not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    cl=int(input("Enter new Mobile number:"))
+                    query="update stud_info set mobileno= %s where srno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+                
+
+               if ch==5:
+                
+                    #Updating Address
+                    print()
+                    sr=input("Enter Serial Number To Be Updated:")
+                    query="select * from stud_info where srno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Serial number not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+                    print()
+                    cl=input("Enter new Address:")
+                    query="update stud_info set address= '%s' where srno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+                
+                
+               if ch==6:
+
+                    return
+
+
+     def delete_student():
+
+          print()
+          sr=input("Enter serial Number To Be deleted:")
+          query="select * from stud_info where srno='%s'" % (sr,)
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print(sr,"serial number not found")
+               print()
+               return
+          print(sr,"found")
+          rec=list(l[0])
+          print(sr,"record before deletion:")
+          print(rec)
+          print()
+
+          ch=input("Confirm deletion [y/n]?")
+          if ch.upper()=='Y':
+               cur.execute("delete from stud_info where srno='%s'" % (sr,))
+               con.commit()
+          print("Deleted successfully")
+          print()
+          print("After searching we are getting...")
+
+          query="select * from stud_info"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Empty Set")
+          else:
+               print(tabulate(l,headers=["Serial Number","Name","Class","Date Of Birth","Mobile Number","Address"],tablefmt="psql"))
+          print()
+          return
+
+
+     while True:
+          print()
+          print("-------- STUDENT Menu--------")
+          print("1. Insert Record")
+          print("2. Display All Data")
+          print("3. Search Record")
+          print("4. Update Record")
+          print("5. Delete Record")
+          print("6. Exit")
+          ch=int(input("Enter your choice:"))
+
+          if ch==1:
+               insert_student()
+
+          if ch==2:
+
+               showing_student()
+
+          if ch==3:
+
+               search_student()
+               
+          if ch==4:
+
+               update_student()
+               
+          if ch==5:
+
+               delete_student()
+               
+          if ch==6:
+               
+               break
+               
+
+
+def teacher():
+
+     q="use school"
+     cur.execute(q)
+     
+     def insert_teacher():
+          tnm=input("Enter teachers Name: ")
+          sub=input("Enter Subject: ")
+          post=input("Enter Post:")
+          sal=input("Enter salary")
+          mob=input("Enter Mobile Number:")
+          add=input("Enter Address:")
+
+
+          query="select * from teacher_info"
+          cur.execute(query)
+          l=cur.fetchall()
+          tno= "T00"+str(len(l)+1)
+
+          cur.execute("select * from teacher_info where tno='%s'" % (tno,))
+
+
+          b1=cur.fetchall()
+          if b1==[]:
+               query="insert into teacher_info values('%s','%s','%s','%s','%s','%s','%s')" % (tno,tnm,sub,post,sal,add,mob)
+               cur.execute(query)
+               con.commit()
+          
+          if b1!=[]:
+               n=int(tno[1:4])
+               n+=1
+               t="T00"+str(n)
+               query="insert into teacher_info values('%s','%s','%s','%s','%s','%s','%s')" % (t,tnm,sub,post,sal,mob,add)
+               cur.execute(query)
+               con.commit()
+          
+          print("new record inserted successfully \n Your ID is",tno,", Please note is down.")
+          print()
+
+
+     def showing_teacher():
+          query="select * from teacher_info"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+            print("Empty set...")
+            print()
+            return
+
+          else:
+            print(tabulate(l,headers=["Teacher's ID","Name","Subject","Post","Salary","Address","Mobile Number"],tablefmt="psql"))
+          print()
+
+
+     def search_teacher():
+          
+          while True:
+               print()
+               print("----- SEARCHING IN TEACHER TABLE-----")
+               print("1. Search by Teacher's ID")
+               print("2. Search by Name")
+               print("3. Search by Subject")
+               print("4. Search by Post")
+               print("5. Search by Address")
+               print("6. Search by Salary")
+               print("7. Exit")
+               ch=int(input("Enter your choice:"))
+
+               if ch==1:
+
+                 #Search By Teacher ID
+
+                 print()
+                 n=input("Enter Teacher's ID to be searched:")
+                 query="select * from teacher_info where tno='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"Teacher's ID not found")
+                     print()
+                     
+                   
+                 else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Subject","Post","Salary","Address","Mobile Number"],tablefmt="psql"))
+                 print()            
+                 
+               if ch==2:
+
+                 #Search By Name
+
+                 print()
+                 n=input("Enter Teacher name to be searched:")
+                 query="select * from teacher_info where name='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"Teacher name not found")
+                     print()
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Subject","Salary","Address","Mobile Number"],tablefmt="psql"))
+                 print()
+                 
+               if ch==3:
+
+                 #Search By Subject
+
+                 print()
+                 n=input("Enter Subject to be searched:")
+                 query="select * from teacher_info where sub='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"Subject not found")
+                     
+                 else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Subject","Salary","Address","Mobile Number"],tablefmt="psql"))
+                 print()
+
+               if ch==4:
+
+                 #Search By Post
+
+                 print()
+                 n=input("Enter Post to be searched:")
+                 query="select * from teacher_info where post='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"Post not found")
+                     print()
+                     
+                   
+                 else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Subject","Salary","Address","Mobile Number"],tablefmt="psql"))
+                 print()
+                        
+               if ch==5:
+
+                 #Search By Address
+
+                 print()
+                 n=input("Enter Address to be searched :")
+                 query="select * from teacher_info where address='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print("Address with",n,"not found")
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Subject","Salary","Address","Mobile Number"],tablefmt="psql"))
+                 print()
+
+
+               if ch==6:
+
+                 #Search By Salary
+
+                 print()
+                 n=input("Enter salary to be searched:")
+                 query="select * from teacher_info where salary='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print("No Records with salary",n)
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Subject","Salary","Address","Mobile Number"],tablefmt="psql"))
+                 print()
+
+               if ch==7:
+
+                    return
+                 
+
+     def update_teacher():
+
+          while True:
+
+               print()
+               print("------UPDATE MENU------")
+               print("1. Update Name")
+               print("2. Update Subject")
+               print("3. Update Salary")
+               print("4. Update Post")
+               print("5. Update Mobile Number")
+               print("6. Update Address")
+               print("7. Exit")
+               ch=int(input("Enter your choice:"))
+
+               if ch==1:
+                    #Updaing Name
+
+                    print()
+                    sr=input("Enter Teacher's ID To Be Updated:")
+                    query="select * from teacher_info where tno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Teacher's ID not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    nm=input("Enter new name:")
+                    query="update teacher_info set name= '%s' where tno='%s'" % (nm,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+                
+                
+               if ch==2:
+                    #Updating Subject
+                    print()
+                    sr=input("Enter Teacher's ID To Be Updated:")
+                    query="select * from teacher_info where tno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Teacher's ID not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    cl=input("Enter new Subject:")
+                    query="update teacher_info set sub= '%s' where tno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+               if ch==3:
+                    #Updating salary
+                    print()
+                    sr=input("Enter Teacher's ID To Be Updated:")
+                    query="select * from teacher_info where tno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Teacher's ID not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    cl=input("Enter new Salary:")
+                    query="update teacher_info set salary= '%s' where tno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+               if ch==4:
+                    #Updaing Post
+
+                    print()
+                    sr=input("Enter Teacher's ID To Be Updated:")
+                    query="select * from teacher_info where tno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Teacher's ID not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    pt=input("Enter new Post:")
+                    query="update teacher_info set post= '%s' where tno='%s'" % (pt,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+                
+               if ch==5:
+                    
+                    #Updating Mobile Number
+                    print()
+                    sr=input("Enter Teacher's ID To Be Updated:")
+                    query="select * from teacher_info where tno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Teacher's ID not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+
+                    print()
+                    cl=int(input("Enter new Mobile number:"))
+                    query="update teacher_info set mobileno= %s where tno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+                
+
+               if ch==6:
+                
+                    #Updating Address
+                    print()
+                    sr=input("Enter Teacher's ID To Be Updated:")
+                    query="select * from teacher_info where tno='%s'" % (sr,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(sr,"Teacher's ID not found")
+                         print()
+                         return
+                    print(sr,"found")
+                    rec=list(l[0])
+                    print("record before updation:")
+                    print(rec)
+                    print()
+                    print()
+                    cl=input("Enter new Address:")
+                    query="update teacher_info set address= '%s' where tno='%s'" % (cl,sr)
+                    cur.execute(query)
+                    con.commit()
+                    print("Record Updated")
+                    print()
+
+                
+                
+               if ch==7:
+
+                    return
+
+
+     def delete_teacher():
+
+          print()
+          sr=input("Enter Teacher's ID To Be deleted:")
+          query="select * from teacher_info where tno='%s'" % (sr,)
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print(sr,"Teacher's ID not found")
+               print()
+               return
+          print(sr,"found")
+          rec=list(l[0])
+          print(sr,"record before deletion:")
+          print(rec)
+          print()
+
+          ch=input("Confirm deletion [y/n]?")
+          if ch.upper()=='Y':
+               cur.execute("delete from teacher_info where tno='%s'" % (sr,))
+               con.commit()
+          print("Deleted successfully")
+          print()
+          print("After searching we are getting...")
+
+          query="select * from teacher_info"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Empty Set")
+          else:
+               print(tabulate(l,headers=["Teacher's ID","Name","Subject","Salary","Address","Mobile Number"],tablefmt="psql"))
+          print()
+          return
+
+
+     while True:
+          print()
+          print("-------- TEACHER MENU--------")
+          print("1. Insert Record")
+          print("2. Display All Data")
+          print("3. Search Record")
+          print("4. Update Record")
+          print("5. Delete Record")
+          print("6. Exit")
+          ch=int(input("Enter your choice:"))
+
+          if ch==1:
+               insert_teacher()
+
+          if ch==2:
+
+               showing_teacher()
+
+          if ch==3:
+
+               search_teacher()
+               
+          if ch==4:
+
+               update_teacher()
+               
+          if ch==5:
+
+               delete_teacher()
+               
+          if ch==6:
+               
+               return
+
+
+
+def fee():
+
+     q="use school"
+     cur.execute(q)
+     
+     def insert_fees():
+          snm=input("Enter Student Name: ")
+          c=input("Enter Class: ")
+          sno=input("Enter Serial Number:")
+          month=input("Enter Month ")
+          dp=input("Enter Todays date:")
+          paid=input("Enter Paid Status")
+          query="insert into fees values('%s','%s','%s','%s','%s','%s')" % (snm,c,sno,month,dp,paid)
+          cur.execute(query)
+          con.commit()
+          print("new info record inserted successfully")
+          print()
+
+
+
+     def showing_fees():
+          query="select * from fees"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Empty set...")
+               print()
+               return
+
+          else:
+               print(tabulate(l,headers=["Student Name","Class","Serial Number","Month","Date","Paid Status"],tablefmt="psql"))
+          print()
+
+
+     def search_fees():
+          
+          while True:
+               print()
+               print("----- SEARCHING IN FEES TABLE-----")
+               print("1. Search by Serial Number")
+               print("2. Search by Month")
+               print("3. Search by Paid Status")
+               print("4. Exit")
+               ch=int(input("Enter your choice:"))
+
+               if ch==1:
+
+                 #Search By Serial Number
+
+                 print()
+                 n=input("Enter serial number to be searched:")
+                 query="select * from fees where srno='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print(n,"serial number not found")
+                     print()
+                     
+                   
+                 else:
+                     print(tabulate(l,headers=["Student Name","Class","Serial Number","Month","Date","Paid Status"],tablefmt="psql"))
+                 print()            
+                 
+               if ch==2:
+
+                 #Search By Month
+
+                 print()
+                 n=input("Enter Month to be searched :")
+                 query="select * from fees where month='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print("Month with",n,"not found")
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Student Name","Class","Serial Number","Month","Date","Paid Status"],tablefmt="psql"))
+                 print()
+
+               if ch==3:
+
+                 #Search By Paid Status
+
+                 print()
+                 n=input("Enter Paid Status{Yes/No} to be searched :")
+                 query="select * from fees where Paid='%s'" % (n,)
+                 cur.execute(query)
+                 l=cur.fetchall()
+                 if l==[]:
+                     print("Paid Status with",n,"not found")
+                     
+                           
+                 else:
+                     print(tabulate(l,headers=["Student Name","Class","Serial Number","Month","Date","Paid Status"],tablefmt="psql"))
+                 print()
+
+               if ch==4:
+
+                    return
+
+     def Update_fees():
+
+          print()
+          sr=input("Enter Serial Number To Be Updated:")
+          query="select * from fees where srno='%s'" % (sr,)
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print(sr,"Serial Number not found")
+               print()
+               return
+          print(sr,"found")
+          rec=list(l[0])
+          print("record before updation:")
+          print(rec)
+          print()
+
+          print()
+          cl=input("Enter Paid Status:")
+          month=input("Enter Month:")
+          query="update fees set paid= '%s' where srno='%s' and month='%s'" % (cl,sr,month)
+          cur.execute(query)
+          con.commit()
+          print("Record Updated")
+          print()
+
+     while True:
+          print()
+          print("-------- FEES MENU--------")
+          print("1. Insert Record")
+          print("2. Display All Data")
+          print("3. Search Record")
+          print("4. Update Paid Status")
+          print("5. Exit")
+          ch=int(input("Enter your choice:"))
+
+          if ch==1:
+               insert_fees()
+
+          if ch==2:
+
+               showing_fees()
+
+          if ch==3:
+
+               search_fees()
+               
+          if ch==4:
+               
+               Update_fees()
+               
+          if ch==5:
+
+               return
+
+
+def salary():
+
+     q="use school"
+     cur.execute(q)
+     
+     def insert_salary():
+          tno=input("Enter Teacher's ID: ")
+          tnm=input("Enter teachers Name: ")
+          month=input("Enter Month ")
+          dp=input("Enter Paid Status{YES or NO}:")
+          query="insert into salary values('%s','%s','%s','%s')" % (tno,tnm,month,dp)
+          cur.execute(query)
+          con.commit()
+          print("new info record inserted successfully")
+          print()
+
+
+     def showing_salary():
+          query="select * from salary"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+            print("Empty set...")
+            print()
+            return
+
+          else:
+            print(tabulate(l,headers=["Teacher's ID","Name","Month","Paid Status"],tablefmt="psql"))
+          print()
+
+
+     def search_salary():
+
+          while True:
+               print()
+               print("----- SEARCHING IN FEES TABLE-----")
+               print("1. Search by Teacher's ID")
+               print("2. Search by Name")
+               print("3. Search by Month")
+               print("4. Search by Paid")
+               print("5. Exit")
+               ch=int(input("Enter your choice:"))
+
+               if ch==1:
+
+                    #Search By Teacher's ID
+                    
+                    print()
+                    n=input("Enter Teacher's ID to be searched:")
+                    query="select * from salary where tno='%s'" % (n,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(n,"Teacher's ID not found")
+                         print()
+                     
+
+                    else:
+                         print(tabulate(l,headers=["Teacher's ID","Name","Month","Paid Status"],tablefmt="psql"))
+                    print()
+
+
+               if ch==2:
+
+                    #Search By Name
+
+                    print()
+                    n=input("Enter Teacher Name to be searched:")
+                    query="select * from salary where name='%s'" % (n,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                     print(n,"Teacher Name not found")
+                     print()
+                     
+
+                    else:
+                     print(tabulate(l,headers=["Teacher's ID","Name","Month","Paid Status"],tablefmt="psql"))
+                    print()
+
+
+               if ch==3:
+
+                    #Search By Month
+
+                    print()
+                    n=input("Enter Month to be searched:")
+                    query="select * from salary where month='%s'" % (n,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(n,"Account number not found")
+                         print()
+                     
+
+                    else:
+                         print(tabulate(l,headers=["Teacher's ID","Name","Month","Paid Status"],tablefmt="psql"))
+                    print()
+
+               if ch==4:
+
+                    #Search By Paid Status
+                    
+                    print()
+                    n=input("Enter Paid Status{Yes or No} to be searched:")
+                    n=n.lower()
+                    query="select * from salary where paid='%s'" % (n,)
+                    cur.execute(query)
+                    l=cur.fetchall()
+                    if l==[]:
+                         print(n,"Teacher's ID not found")
+                         print()
+                     
+
+                    else:
+                         print(tabulate(l,headers=["Teacher's ID","Name","Month","Paid Status"],tablefmt="psql"))
+                    print()
+
+               if ch==5:
+
+                    return
+
+     def Update_salary():
+          print()
+          tno=input("Enter Teacher's ID To Be Updated:")
+          query="select * from salary where tno='%s'" % (tno,)
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print(tno,"Teacher's ID not found")
+               print()
+               return
+          print(tno,"found")
+          rec=list(l[0])
+          print("record before updation:")
+          print(rec)
+          print()
+
+          print()
+          paid=input("Enter Paid Status:")
+          month=input("Enter Month:")
+          query="update salary set paid= '%s' where tno='%s' and month='%s'" % (paid,tno,month)
+          cur.execute(query)
+          con.commit()
+          print("Record Updated")
+          print()
+          
+     
+     while True:
+          print()
+          print("-------- SALARY MENU--------")
+          print("1. Insert Record")
+          print("2. Display All Data")
+          print("3. Search Record")
+          print("4. Update Paid Status")
+          print("5. Exit")
+          ch=int(input("Enter your choice:"))
+
+          if ch==1:
+               insert_salary()
+
+          if ch==2:
+
+               showing_salary()
+
+          if ch==3:
+
+               search_salary()
+
+          if ch==4:
+
+               Update_salary()
+               
+          if ch==5:
+
+               return
+
+def admin():
+
+     def show_admin():
+          query="select admin_id,name from admin_school"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Empty set...")
+               print()
+               return
+
+          else:
+               print("-------------------------------------")
+               print("-------------------------------------")
+               print()
+               print("PASSWORD ARE NOT SHOWN FOR SECURITY PURPOSES")
+               print()
+               print("-------------------------------------")
+               print("-------------------------------------")
+               
+               print(tabulate(l,headers=["ADMIN ID","Name"],tablefmt="psql"))
+          print()
+
+     def insert_admin():
+
+          aname=input("Enter Admin's Name: ")
+          passw=input("Enter Your password(Upto 18 Characters): ")
+
+          char=s.ascii_uppercase
+          digit=s.digits
+          string=''.join(r.sample(char*2,2))
+          digit=''.join(r.sample(digit*2,2))
+          adno=string+digit
+          print("Your ID is",adno,"Please note it down.")
+          query="insert into admin_school values('%s','%s','%s')" % (adno,aname,passw)
+          cur.execute(query)
+          con.commit()
+          print("new info record inserted successfully")
+          print()
+          
+          
+     def update_admin():
+
+          print()
+          adno=input("Enter Admin's ID To Be Updated:")
+          query="select * from admin_school where admin_id='%s'" % (adno,)
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Admin's ID with",adno,"not found")
+               print()
+               return
+          print(adno,"found")
+          print()
+          pas=input("Enter New Password(Upto 18 characters):")
+
+          if len(pas)>18:
+               print("Length of Password is more then prescribed..")
+               pas=input("Enter New Password(Upto 18 characters):")
+          query="update admin_school set password='%s' where admin_id='%s'" % (pas,adno)
+          cur.execute(query)
+          con.commit()
+          print("Record Updated")
+          print()
+
+     def delete_admin():
+          print()
+          adno=input("Enter Admin's ID To Be deleted:")
+          query="select admin_id,name from admin_school where admin_id='%s'" % (adno,)
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Admin's ID with",adno,"not found")
+               print()
+               return
+          print(adno,"found")
+          rec=list(l[0])
+          print(adno,"record before deletion:")
+          print(rec)
+          print()
+
+          ch=input("Confirm deletion [y/n]?")
+          if ch.upper()=='Y':
+               cur.execute("delete from admin_school where admin_id='%s'" % (adno,))
+               con.commit()
+          print("Deleted successfully")
+          print()
+          print("After searching we are getting...")
+
+          query="select admin_id,name from admin_school"
+          cur.execute(query)
+          l=cur.fetchall()
+          if l==[]:
+               print("Empty Set")
+          else:
+               
+               if len(l)==1:
+                    
+                    print("Now, There is 1 Admin")
+                    print(tabulate(l,headers=["ADMIN ID","NAME"],tablefmt="psql"))
+
+               if len(l)>1:
+                    
+                    print("Now, There are",len(l),"Admin")
+                    print(tabulate(l,headers=["ADMIN ID","NAME"],tablefmt="psql"))
+               
+          print()
+          return
+     
+     while True:
+          print()
+          print("-------- ADMIN MENU--------")
+          print("1. Insert Record")
+          print("2. Display All Record")
+          print("3. Update Password")
+          print("4. Delete Admin")
+          print("5. Exit")
+          ch=int(input("Enter your choice:"))
+
+          if ch==1:
+               insert_admin()
+
+          if ch==2:
+
+               show_admin()
+
+          if ch==3:
+
+               update_admin()
+
+          if ch==4:
+
+               delete_admin()
+               
+          if ch==5:
+
+               return
+
+          
+
+def mainmenu():
+     while True:
+          q="use school"
+          cur.execute(q)
+
+          cur.execute("select * from admin_school")
+          l=cur.fetchall()
+          if l==[]:     
+               cur.execute("insert into admin_school values('AJ19','anmol','6625')")
+               con.commit()
+
+          pas=input("Enter Password : ")
+          cur.execute("select * from admin_school")
+          l=cur.fetchall()
+
+          for i in l:
+
+               if pas==i[2]:
+
+                    print("Welcome ",i[1].upper())
+                    print()
+                    print("-------- SQL COMMANDS --------")
+                    print("1. Manipulation related to student's database")
+                    print("2. Manipulation related to teacher's database")
+                    print("3. Manipulation related to Admin's database")
+                    print("4. Exit")
+                    ch=int(input("Enter your Choice:"))
+                    if ch==1:
+                         print("1. Manipulation related to Student's Information")
+                         print("2. Manipulation related to Fees Information")
+                         print("3. Back to MainMenu")
+                         choice=int(input("Enter your Choice:"))
+                         if choice==1:
+                              student()
+                         if choice==2:
+                              fee()
+                         if choice==3:
+                              back()
+                    if ch==2:
+                         print("1. Manipulation related to Teacher's Information")
+                         print("2. Manipulation related to salary Information")
+                         print("3. Back to MainMenu")
+                         choice=int(input("Enter your Choice:"))
+                         if choice==1:
+                              teacher()
+                         if choice==2:
+                              salary()
+                         if choice==3:
+                              back()
+
+                    if ch==3:
+                         admin()
+
+                    if ch==4:
+                         cur.close()
+                         con.close()
+                         break
+
+               if pas!=i[2]:
+                    print("Enter Valid Password")
+                    print()
+
+
+mainmenu()
