@@ -1,0 +1,19 @@
+ project details
+7.1 FRONT-END: PYTHON
+7.1.1 MODULE USED
+❖	random
+❖	string
+❖	mysql.connector
+❖	tabulate
+
+7.2 BACK-END: MySQL
+7.2.1 DATABASE USED
+This Project maintain a database named school which contains the table shown below
+
+
+
+
+
+
+
+
